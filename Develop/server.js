@@ -10,7 +10,7 @@ const htmlRoutes = require('./routes/htmlRoutes');
 // Create an instance of the express application
 const app = express();
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Tells the app to use the public folder as a static folder
 app.use(express.static('public'));
@@ -22,6 +22,6 @@ app.use('/api', apiRoutes);
 app.use('/', htmlRoutes);
 
 // Start the server on the defined PORT and log a message to the console to inform user
-app.listen(PORT, () => {
-console.log(`Server available at localhost: ${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`App listening at http://localhost:${PORT}`)
+);
