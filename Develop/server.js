@@ -1,18 +1,27 @@
+// Import express module
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
 
+// Import apiRoutes module from the routes folder
+const apiRoutes = require('./routes/apiRoutes');
+
+// Import htmlRoutes module from the routes folder
+const htmlRoutes = require('./routes/htmlRoutes');
+
+// Create an instance of the express application
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+const PORT = process.env.PORT || 3001;
 
+// Tells the app to use the public folder as a static folder
 app.use(express.static('public'));
 
-require("./routes/apiRoutes")(app);
-require("./routes/htmlRoutes")(app);
+// Set up the app to use the imported apiRoutes module for requests made to the "/api" endpoint
+app.use('/api', apiRoutes);
 
-app.listen(PORT, function () {
-    console.log("App listening on PORT " + PORT);
+// Set up the app to use the imported htmlRoutes module for requests made to the root endpoint "/"
+app.use('/', htmlRoutes);
+
+// Start the server on the defined PORT and log a message to the console to inform user
+app.listen(PORT, () => {
+console.log(`Server available at localhost: ${PORT}`);
 });
