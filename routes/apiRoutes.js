@@ -13,11 +13,14 @@ router.get('/notes', function (req, res) {
 });
 
 router.post('/notes', function (req, res) {
-    let db = JSON.parse(fs.readFileSync(path.join(__dirname, '../db/db.json'), 'utf8'));
-    res.json(db);
-    const newDb = db.filter(note => note.id !== req.params.id);
-    fs.writeFileSync(path.join(__dirname, '../db/db.json'), JSON.stringify(newDb));
-    res.json(newDb);
+    let newNote = {
+        title: req.body.title,
+        text: req.body.text,
+        id: Math.random(),
+    };
+    newNotes.push (newNote);
+    fs.writeFileSync('../db/db.json'), JSON.stringify(newNotes);
+    res.json(newNotes);
 });
 router.delete('/notes/:id', function (req, res) {
     let newNotes = [];
@@ -28,7 +31,7 @@ router.delete('/notes/:id', function (req, res) {
     }
 
 notesDB=newNotes;
-fs.writeFileSync(path.join(__dirname, '../db/db.json'), JSON.stringify(notesDB));
+fs.writeFileSync('../db/db.json'), JSON.stringify(notesDB);
 res.json(notesDB);
 });
 
