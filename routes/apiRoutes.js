@@ -2,12 +2,12 @@ const router = require('express').Router();
 const fs = require('fs');
 let notesdb = require('../db/db.json');
 
-router.get('/notes', function (_req, res) {
+router.get('/notes', (req, res) => {
     notesdb = JSON.parse(fs.readFileSync('../db/db.json'));
     res.json(notesdb);
 });
 
-router.post('/notes', function (req, res) {
+router.post('/notes', (req, res) => {
     let newNote = {
         title: req.body.title,
         text: req.body.text,
@@ -19,7 +19,7 @@ router.post('/notes', function (req, res) {
     res.json(newNotes);
 });
 
-router.delete('/notes/:id', function (req, res) {
+router.delete('/notes/:id', (req, res) => {
     let newNotes = [];
     for (var i = 0; i < notesdb.length; i++) {
         if (notesdb[i].id !== req.params.id) {
