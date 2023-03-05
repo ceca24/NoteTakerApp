@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-let notesdb = require('./db/db.json');
+let notesdb = require('../db/db.json');
 
 const router = require('express').Router();
 
