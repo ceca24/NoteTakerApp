@@ -1,6 +1,7 @@
 // dependencies
 const express = require("express");
 const path = require("path");
+const routes = require("./routes");
 
 var PORT = process.env.PORT || 3001;
 
@@ -9,14 +10,20 @@ const app = express();
 
 //Set up data parsing, and use middleware
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
-app.use(express.static(path.join("public")));
 
+app.use(express.static("public"));
 
+app.use(routes);
 
-require ("./routes/apiRoutes")(app);
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
 
-require ("./routes/htmlRoutes")(app);
+app.get("/notes", (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
 
 //listener
 app.listen(PORT, () =>
