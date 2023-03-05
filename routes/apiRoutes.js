@@ -3,8 +3,7 @@ const fs = require('fs');
 let notesdb = require('../db/db.json');
 
 router.get('/notes', (req, res) => {
-    notesdb = JSON.parse(fs.readFileSync('../db/db.json'));
-    res.json(notesdb);
+    res.sendFile(path.join(__dirname, '../db/db.json'));
 });
 
 router.post('/notes', (req, res) => {
