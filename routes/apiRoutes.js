@@ -1,47 +1,39 @@
-const fs = require('fs');
+const express = require("express");
+const fs = require("fs");
+const uuid = require("uuid");
 
-let notesdb = require('../db/db.json');
-
-const router = require('express').Router();
-
-app.get('/api/notes', (req, res) => {
-
-        notesdb = JSON.parse(fs.readFileSync('./db/db.json'));
-        req.body,
-        res.json(notesdb);
+module.exports = function (app) {
+    app.get("/api/notes", function (req, res) {
+        fs.readFile("./db/db.json", "utf8", function (err, data) {
+        if (err) throw err;
+        res.json(JSON.parse(data));
+        });
     });
-
-    app.post('/api/notes', (req, res) => {
-
-        const newNote = {
-            title: req.body.title,
-            text: req.body.text,
-            id: Math.random(),
-        };
-
-        notesdb.push(newNote);
-
-        fs.writeFileSync('./db/db.json', JSON.stringify(notesdb));
-
-        res.json(notesdb);
-
+    
+    app.post("/api/notes", function (req, res) {
+        fs.readFile("./db/db.json", "utf8", function (err, data) {
+        if (err) throw err;
+        const notes = JSON.parse(data);
+        const newNote = req.body;
+        newNote.id = uuid.v4();
+        notes.push(newNote);
+        fs.writeFile("./db/db.json", JSON.stringify(notes), function (err) {
+            if (err) throw err;
+            res.json(notes);
+        });
+        });
     });
-
-    app.delete('/notes/:id', (req, res) => {
-
-        let updateNote = [];
-
-        for (var i = 0; i < notesdb.length; i++) {
-            if (notesdb[i].id != req.params.id) {
-                updateNote.push(notesdb[i]);
-            }
-        }
-        notesdb=updateNote;
-
-        fs.writeFileSync('./db/db.json', JSON.stringify(notesdb));
-
-        res.json(notesdb);
-
+    
+    app.delete("/api/notes/:id", function (req, res) {
+        fs.readFile("./db/db.json", "utf8", function (err, data) {
+        if (err) throw err;
+        const notes = JSON.parse(data);
+        const noteId = req.params.id;
+        const newNotes = notes.filter((note) => note.id !== noteId);
+        fs.writeFile("./db/db.json", JSON.stringify(newNotes), function (err) {
+            if (err) throw err;
+            res.json(newNotes);
+        });
+        });
     });
-
-module.exports = router;
+    };
