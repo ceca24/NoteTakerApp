@@ -2,30 +2,22 @@ const fs = require('fs');
 
 let notesdb = require('./db/db.json');
 
-var uuid = require('uuid');
+const router = require('express').Router();
 
-module.exports = (app) => {
+app.get('/api/notes', (req, res) => {
 
-    app.get('/api/notes', (req, res) => {
-
-        let data = fs.readFileSync('./db/db.json', 'utf8');
-        
-        notesdb = JSON.parse(data);
-        
+        notesdb = JSON.parse(fs.readFileSync('./db/db.json'));
+        req.body,
         res.json(notesdb);
-
     });
 
     app.post('/api/notes', (req, res) => {
 
         const newNote = {
-            ...req.body,
-            id: uuid.v4()
+            title: req.body.title,
+            text: req.body.text,
+            id: Math.random(),
         };
-
-        let data = fs.readFileSync('./db/db.json', 'utf8');
-
-        notesdb = JSON.parse(data);
 
         notesdb.push(newNote);
 
@@ -35,13 +27,16 @@ module.exports = (app) => {
 
     });
 
-    app.delete('/api/notes/:id', (req, res) => {
+    app.delete('/notes/:id', (req, res) => {
 
-        let data = fs.readFileSync('./db/db.json', 'utf8');
+        let updateNote = [];
 
-        notesdb = JSON.parse(data);
-
-        notesdb = notesdb.filter(note => note.id !== req.params.id);
+        for (var i = 0; i < notesdb.length; i++) {
+            if (notesdb[i].id != req.params.id) {
+                updateNote.push(notesdb[i]);
+            }
+        }
+        notesdb=updateNote;
 
         fs.writeFileSync('./db/db.json', JSON.stringify(notesdb));
 
@@ -49,4 +44,4 @@ module.exports = (app) => {
 
     });
 
-};
+module.exports = router;
