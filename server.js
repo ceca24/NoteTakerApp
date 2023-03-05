@@ -1,31 +1,18 @@
-// dependencies
 const express = require("express");
 const path = require("path");
-const routes = require("./routes/apiRoutes.js");
+const fs = require("fs");
 
-var PORT = process.env.PORT || 3001;
-
-//Use express
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-//Set up data parsing, and use middleware
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.json());
 
 app.use(express.static("public"));
 
-app.use(routes);
+require("./apiRoutes")(app);
+require("./htmlRoutes")(app);
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
+app.listen(PORT, function () {
+  console.log("App listening on PORT " + PORT);
 });
-
-app.get("/notes", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/notes.html"));
-});
-
-//listener
-app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT}`)
-);
